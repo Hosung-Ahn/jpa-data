@@ -22,4 +22,9 @@ public class Member {
     public Member(String name) {
         this.name = name;
     }
+
+    public void changeTeam(Team team) {
+        this.team = team;
+        team.getMembers().add(this);
+    }
 }
