@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import study.jpadata.dto.MemberDto;
 import study.jpadata.entity.Member;
 
 import java.util.List;
@@ -16,4 +17,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m.name from Member m")
     List<String> findUsernameList();
+
+    @Query("select new study.jpadata.dto.MemberDto(m.id, m.name, t.name) from Member m join m.team t")
+    List<MemberDto> findMemberDto();
 }
