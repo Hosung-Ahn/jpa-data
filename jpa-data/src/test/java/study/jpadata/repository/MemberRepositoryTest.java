@@ -5,7 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
+import study.jpadata.dto.MemberDto;
 import study.jpadata.entity.Member;
+import study.jpadata.entity.Team;
 
 import java.util.List;
 
@@ -18,6 +20,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    TeamRepository teamRepository;
+
     @Test
     public void testMember() {
         Member member = new Member("memberA");
@@ -90,5 +95,19 @@ class MemberRepositoryTest {
 
         assertThat(result.get(0)).isEqualTo("AAA");
         assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void findMemberDto() {
+        Team team = new Team("teamA");
+        teamRepository.save(team);
+        Member member1 = new Member("AAA", 10, team);
+        memberRepository.save(member1);
+
+        List<MemberDto> result = memberRepository.findMemberDto();
+
+        for (MemberDto memberDto : result) {
+            System.out.println("memberDto = " + memberDto);
+        }
     }
 }
