@@ -3,6 +3,9 @@ package study.jpadata.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.jpadata.dto.MemberDto;
@@ -132,6 +135,36 @@ class MemberRepositoryTest {
         memberRepository.save(new Member("member4", 10));
         memberRepository.save(new Member("member5", 10));
 
-        
+        int age = 10;
+        int paging = 0;
+        int size = 3;
+        PageRequest pageRequest = PageRequest.of(paging, size, Sort.by(Sort.Direction.DESC, "name"));
+
+        Page<Member> page = memberRepository.findByAge(age, pageRequest);
+
+        List<Member> content = page.getContent();
+        long totalElements = page.getTotalElements();
+
+        for (Member member : content) {
+            System.out.println("member = " + member);
+        }
+        System.out.println("totalElements = " + totalElements);
+
+        paging += 1;
+        System.out.println("paging = " + paging);
+        memberRepository.save(new Member("member6", 10));
+
+        pageRequest = PageRequest.of(paging, size, Sort.by(Sort.Direction.DESC, "name"));
+        page = memberRepository.findByAge(age, pageRequest);
+
+        content = page.getContent();
+        totalElements = page.getTotalElements();
+
+        for (Member member : content) {
+            System.out.println("member = " + member);
+        }
+        System.out.println("totalElements = " + totalElements);
+
+
     }
 }
