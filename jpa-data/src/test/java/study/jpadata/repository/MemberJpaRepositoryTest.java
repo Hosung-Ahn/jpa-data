@@ -86,7 +86,7 @@ class MemberJpaRepositoryTest {
         }
 
         offset += limit;
-
+        memberJpaRepository.save(new Member("member6", 10));
         result = memberJpaRepository.findByPage(age, offset, limit);
 
         for (Member member : result) {
