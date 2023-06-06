@@ -164,7 +164,5 @@ class MemberRepositoryTest {
             System.out.println("member = " + member);
         }
         System.out.println("totalElements = " + totalElements);
-
-
     }
 }
