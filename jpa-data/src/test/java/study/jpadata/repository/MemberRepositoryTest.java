@@ -164,5 +164,11 @@ class MemberRepositoryTest {
             System.out.println("member = " + member);
         }
         System.out.println("totalElements = " + totalElements);
+
+        List<MemberDto> memberDto = page.map(member -> new MemberDto(member.getId(), member.getName(), null)).getContent();
+
+        for (MemberDto dto : memberDto) {
+            System.out.println("dto = " + dto);
+        }
     }
 }
