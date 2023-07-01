@@ -185,7 +185,7 @@ class MemberRepositoryTest {
         memberRepository.save(new Member("member5", 30));
 
         int updatedCnt = memberRepository.bulkAgePlus(20);
-        
+
         assertThat(updatedCnt).isEqualTo(3);
 
         List<Member> members = memberRepository.findAll();
@@ -193,5 +193,54 @@ class MemberRepositoryTest {
         for (Member member : members) {
             System.out.println(member.getName() + " " + member.getAge());
         }
+    }
+
+    @Test
+    public void findMemberLazy() {
+        // given
+        // member1 -> teamA
+        // member2 -> teamB
+
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 20, teamB);
+
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        //when
+        //select member
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println("member = " + member.getName());
+            // query 가 한번 더 발생한다.
+            System.out.println("member's team name = " + member.getTeam().getName());
+        }
+        
+        //select member fetch join team
+        List<Member> membersJoinTeam = memberRepository.findAllMemberJoinTeam();
+
+        for (Member member : membersJoinTeam) {
+            System.out.println("member.getName() = " + member.getName());
+            // query 가 발생하지 않는다.
+            System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
+        }
+
+        //select member using entity graph
+        List<Member> membersByEntityGraph = memberRepository.findAll();
+        for (Member member : membersJoinTeam) {
+            System.out.println("member.getName() = " + member.getName());
+            // query 가 발생하지 않는다.
+            System.out.println("member.getTeam().getName() = " + member.getTeam().getName());
+        }
+
     }
 }
