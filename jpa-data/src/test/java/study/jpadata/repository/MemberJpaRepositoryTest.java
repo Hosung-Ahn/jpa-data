@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.jpadata.entity.Member;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
@@ -15,6 +17,9 @@ import static org.assertj.core.api.Assertions.*;
 class MemberJpaRepositoryTest {
     @Autowired
     MemberJpaRepository memberJpaRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void testMember() {
@@ -91,6 +96,28 @@ class MemberJpaRepositoryTest {
 
         for (Member member : result) {
             System.out.println("member = " + member);
+        }
+    }
+
+    @Test
+    public void bulkUpdate() {
+        memberJpaRepository.save(new Member("member1", 10));
+        memberJpaRepository.save(new Member("member2", 15));
+        memberJpaRepository.save(new Member("member3", 20));
+        memberJpaRepository.save(new Member("member4", 25));
+        memberJpaRepository.save(new Member("member5", 30));
+
+        int updatedCnt = memberJpaRepository.bulkAgePlus(20);
+
+        em.flush();
+        em.clear();
+
+        assertThat(updatedCnt).isEqualTo(3);
+
+        List<Member> members = memberJpaRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println(member.getName() + " " + member.getAge());
         }
     }
 }
