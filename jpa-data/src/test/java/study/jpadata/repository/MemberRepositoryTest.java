@@ -12,6 +12,8 @@ import study.jpadata.dto.MemberDto;
 import study.jpadata.entity.Member;
 import study.jpadata.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +26,8 @@ class MemberRepositoryTest {
     MemberRepository memberRepository;
     @Autowired
     TeamRepository teamRepository;
+    @PersistenceContext
+    EntityManager em;
 
     @Test
     public void testMember() {
@@ -169,6 +173,25 @@ class MemberRepositoryTest {
 
         for (MemberDto dto : memberDto) {
             System.out.println("dto = " + dto);
+        }
+    }
+
+    @Test
+    public void bulkUpdate() {
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 15));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 25));
+        memberRepository.save(new Member("member5", 30));
+
+        int updatedCnt = memberRepository.bulkAgePlus(20);
+        
+        assertThat(updatedCnt).isEqualTo(3);
+
+        List<Member> members = memberRepository.findAll();
+
+        for (Member member : members) {
+            System.out.println(member.getName() + " " + member.getAge());
         }
     }
 }
