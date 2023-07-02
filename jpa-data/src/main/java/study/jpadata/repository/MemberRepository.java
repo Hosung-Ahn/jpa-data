@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import study.jpadata.dto.MemberDto;
 import study.jpadata.entity.Member;
 
+import javax.persistence.LockModeType;
 import javax.persistence.QueryHint;
 import java.util.List;
 
@@ -43,8 +44,11 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query("select m from Member m where m.id = :id")
     @EntityGraph(attributePaths = "team")
-    Member findMemberJoinTeam(@Param("id") int id);
+    Member findMemberJoinTeam(@Param("id") Long id);
 
     @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly", value="true"))
-    Member findReadOnlyById(int Id);
+    Member findReadOnlyById(Long Id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Member findLockById(Long id);
 }
