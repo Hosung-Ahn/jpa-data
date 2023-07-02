@@ -3,15 +3,13 @@ package study.jpadata.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
-import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import study.jpadata.dto.MemberDto;
 import study.jpadata.entity.Member;
 
+import javax.persistence.QueryHint;
 import java.util.List;
 
 @Repository
@@ -46,4 +44,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("select m from Member m where m.id = :id")
     @EntityGraph(attributePaths = "team")
     Member findMemberJoinTeam(@Param("id") int id);
+
+    @QueryHints(value = @QueryHint(name = "org.hibernate.readOnly", value="true"))
+    Member findReadOnlyById(int Id);
 }
