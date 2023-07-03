@@ -271,4 +271,21 @@ class MemberRepositoryTest {
         //lock
         Member findMember = memberRepository.findLockById(member1.getId());
     }
+
+    @Test
+    public void callCustomRepository() {
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 15));
+        memberRepository.save(new Member("member3", 20));
+
+        List<Member> members = memberRepository.findAllCustom();
+
+        assertThat(members.size()).isEqualTo(3);
+
+        for (Member member : members) {
+            System.out.println(member.getName());
+        }
+
+
+    }
 }

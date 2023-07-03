@@ -9,12 +9,15 @@ import org.springframework.stereotype.Repository;
 import study.jpadata.dto.MemberDto;
 import study.jpadata.entity.Member;
 
+import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
 import javax.persistence.QueryHint;
 import java.util.List;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberRepositoryCustom {
+
     List<Member> findByNameAndAgeGreaterThan(String name, int age);
     @Query("select m from Member m where m.name = :name and m.age > :age")
     List<Member> findUser(@Param("name") String name, @Param("age") int age);
