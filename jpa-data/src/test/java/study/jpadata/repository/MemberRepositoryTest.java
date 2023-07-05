@@ -303,8 +303,10 @@ class MemberRepositoryTest {
         em.flush();
         em.clear();
 
-        System.out.println(findMember.getCreatedAt());
-        System.out.println(findMember.getUpdatedAt());
+        System.out.println(findMember.getCreatedDate());
+        System.out.println(findMember.getLastModifiedDate());
+        System.out.println(findMember.getCreatedBy());
+        System.out.println(findMember.getLastModifiedBy());
 
     }
 
@@ -314,8 +316,8 @@ class MemberRepositoryTest {
         memberRepository.save(member);
 
         System.out.println("업데이트 되기전의 상태");
-        System.out.println(member.getCreatedAt());
-        System.out.println(member.getUpdatedAt());
+//        System.out.println(member.getCreatedAt());
+//        System.out.println(member.getUpdatedAt());
 
         em.flush();
         em.clear();
@@ -331,8 +333,8 @@ class MemberRepositoryTest {
         Member refindMember = memberRepository.findById(member.getId()).get();
 
         System.out.println("entity를 불러만 오고 수정하지 않은 상태");
-        System.out.println(refindMember.getCreatedAt());
-        System.out.println(refindMember.getUpdatedAt());
+//        System.out.println(refindMember.getCreatedAt());
+//        System.out.println(refindMember.getUpdatedAt());
 
     }
 }
