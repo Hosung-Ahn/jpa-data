@@ -1,5 +1,6 @@
 package study.jpadata.repository;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -286,6 +287,52 @@ class MemberRepositoryTest {
             System.out.println(member.getName());
         }
 
+
+    }
+
+    @Test
+    void JpaBaseEntityTest() throws InterruptedException {
+        Member member = new Member("member", 10);
+        memberRepository.save(member); // @PrePersist
+
+        Thread.sleep(100);
+
+        Member findMember = memberRepository.findById(member.getId()).get();
+        findMember.setName("new name"); // @PreUpdate
+
+        em.flush();
+        em.clear();
+
+        System.out.println(findMember.getCreatedAt());
+        System.out.println(findMember.getUpdatedAt());
+
+    }
+
+    @Test
+    void entity를_변경하지않아도_preupdate가_동작하는지() throws InterruptedException {
+        Member member = new Member("member", 10);
+        memberRepository.save(member);
+
+        System.out.println("업데이트 되기전의 상태");
+        System.out.println(member.getCreatedAt());
+        System.out.println(member.getUpdatedAt());
+
+        em.flush();
+        em.clear();
+
+        Thread.sleep(1000);
+
+        Member findMember = memberRepository.findById(member.getId()).get();
+        findMember.setName("member");
+
+        em.flush();
+        em.clear();
+
+        Member refindMember = memberRepository.findById(member.getId()).get();
+
+        System.out.println("entity를 불러만 오고 수정하지 않은 상태");
+        System.out.println(refindMember.getCreatedAt());
+        System.out.println(refindMember.getUpdatedAt());
 
     }
 }
