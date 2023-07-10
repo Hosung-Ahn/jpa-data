@@ -1,12 +1,14 @@
 package study.jpadata.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import study.jpadata.dto.MemberDto;
 import study.jpadata.entity.Member;
 import study.jpadata.repository.MemberRepository;
 
@@ -14,6 +16,7 @@ import javax.annotation.PostConstruct;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class MemberController {
 
     private final MemberRepository memberRepository;
@@ -29,8 +32,10 @@ public class MemberController {
     }
 
     @GetMapping("/members")
-    public Page<Member> list(@PageableDefault(size=10, sort="createdDate") Pageable pageable) {
-        return memberRepository.findAll(pageable);
+    public Page<MemberDto> list(@PageableDefault(size=10, sort="createdDate") Pageable pageable) {
+        Page<Member> page = memberRepository.findAll(pageable);
+        Page<MemberDto> map = page.map(MemberDto::new);
+        return map;
     }
 
 
