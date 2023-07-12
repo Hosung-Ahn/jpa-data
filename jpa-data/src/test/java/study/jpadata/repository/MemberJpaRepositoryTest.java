@@ -109,15 +109,28 @@ class MemberJpaRepositoryTest {
 
         int updatedCnt = memberJpaRepository.bulkAgePlus(20);
 
+        assertThat(updatedCnt).isEqualTo(3);
+
         em.flush();
         em.clear();
-
-        assertThat(updatedCnt).isEqualTo(3);
 
         List<Member> members = memberJpaRepository.findAll();
 
         for (Member member : members) {
             System.out.println(member.getName() + " " + member.getAge());
         }
+    }
+
+    @Test
+    public void bulkQuery_test() {
+        Member member1 = new Member("member1", 10);
+        Member member2 = new Member("member2", 15);
+
+        em.persist(member1);
+        em.persist(member2);
+
+        int cnt = memberJpaRepository.bulkAgePlus(10);
+
+        assertThat(cnt).isEqualTo(2);
     }
 }
